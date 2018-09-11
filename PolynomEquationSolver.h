@@ -63,7 +63,7 @@ class FieldEquationSolutions {
 template<typename Field>
 void FindingEquationError(const std::vector<Field>& polynom_params) {
 
-  if(polynom_params.size() >= 4) {
+  if (polynom_params.size() >= 4) {
     
     throw std::runtime_error("Sorry, too much degree of equation");
   }
@@ -73,13 +73,13 @@ void FindingEquationError(const std::vector<Field>& polynom_params) {
 template<>
 void FindingEquationError<double>(const std::vector<double>& polynom_params) {
 
-  if(polynom_params.size() >= 4) {
+  if (polynom_params.size() >= 4) {
     
     throw std::runtime_error("Sorry, too much degree of equation");
   }
 
   for (const double&  param : polynom_params) {
-    if(!std::isfinite(param)) {
+    if (!std::isfinite(param)) {
       
       throw std::runtime_error("Invalid equation");
     }
@@ -92,19 +92,19 @@ std::vector<Field> ParamsWithoutLeadingZeros(
     std::vector<Field>&& enter_polynom_params) {
 
   std::vector<Field> polynom_params = std::move(enter_polynom_params);
-  if(polynom_params.size() == 0) {
+  if (polynom_params.size() == 0) {
     
     return polynom_params;
   }
 
   const Field ZERO = polynom_params[0] - polynom_params[0];
 
-  typename std::vector<Field>::iterator first_not_zero = find_if(
+  typename std::vector<Field>::iterator first_not_zero = find_if (
       polynom_params.begin(), 
       polynom_params.end(),
       [& ZERO](Field elem){return elem != ZERO;});
   
-  if(first_not_zero == polynom_params.end()) {
+  if (first_not_zero == polynom_params.end()) {
     return std::vector<Field>{ZERO};
   }
 
@@ -120,7 +120,7 @@ std::vector<Field> VectorWithoutRepeatElements(
 
   std::vector<Field> ans;
   for (const Field& x: vec) {
-    if(ans.empty() || x != ans.back() ) {
+    if (ans.empty() || x != ans.back() ) {
       ans.push_back(x);
     }
   }
@@ -157,7 +157,7 @@ std::vector<Field> CreateVectorOfSqrt(const Field&  x) {
 template<>
 std::vector<double> CreateVectorOfSqrt(const double&  x) {
 
-  if(x < 0) {
+  if (x < 0) {
 
     return {};
   }
@@ -172,7 +172,7 @@ void ConstantEquationSolver(
     int *num_of_sol) {
   
   const Field ZERO = polynom_params[0] - polynom_params[0];
-  if(polynom_params[0] == ZERO) {
+  if (polynom_params[0] == ZERO) {
     
     *num_of_sol =  PS_INF_ROOTS;
 
