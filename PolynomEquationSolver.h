@@ -1,4 +1,6 @@
-/*! \file */ 
+/*! 
+ * \file 
+ */ 
 #include <iostream>
 #include <complex>
 #include <algorithm>
@@ -19,6 +21,7 @@ class FieldEquationSolutions;
 template<typename Field> 
 FieldEquationSolutions<Field> FieldPolynomialSolverHelper(
     std::vector<Field>&& polynom_params); 
+
 
 /**
  * @brief result-class of FieldPolynomialSolver
@@ -61,6 +64,7 @@ template<typename Field>
 void FindingEquationError(const std::vector<Field>& polynom_params) {
 
   if(polynom_params.size() >= 4) {
+    
     throw std::runtime_error("Sorry, too much degree of equation");
   }
 }
@@ -70,11 +74,13 @@ template<>
 void FindingEquationError<double>(const std::vector<double>& polynom_params) {
 
   if(polynom_params.size() >= 4) {
+    
     throw std::runtime_error("Sorry, too much degree of equation");
   }
 
   for (const double&  param : polynom_params) {
     if(!std::isfinite(param)) {
+      
       throw std::runtime_error("Invalid equation");
     }
   }
@@ -87,6 +93,7 @@ std::vector<Field> ParamsWithoutLeadingZeros(
 
   std::vector<Field> polynom_params = std::move(enter_polynom_params);
   if(polynom_params.size() == 0) {
+    
     return polynom_params;
   }
 
@@ -100,6 +107,7 @@ std::vector<Field> ParamsWithoutLeadingZeros(
   if(first_not_zero == polynom_params.end()) {
     return std::vector<Field>{ZERO};
   }
+
   polynom_params.erase(
         polynom_params.begin(), first_not_zero);
   return polynom_params;
@@ -138,6 +146,7 @@ std::vector<Field> CreateVectorOfSqrt(const Field&  x) {
   try {
 
     return {-sqrt(x), sqrt(x)};
+
   } catch(...) {
 
     return {};
@@ -149,8 +158,10 @@ template<>
 std::vector<double> CreateVectorOfSqrt(const double&  x) {
 
   if(x < 0) {
+
     return {};
   }
+
   return {-sqrt(x), sqrt(x)};
 }
 
@@ -162,8 +173,11 @@ void ConstantEquationSolver(
   
   const Field ZERO = polynom_params[0] - polynom_params[0];
   if(polynom_params[0] == ZERO) {
+    
     *num_of_sol =  PS_INF_ROOTS;
+
   } else {
+    
     *num_of_sol = 0;
   }
 }
@@ -187,16 +201,19 @@ void SquareEquationSolver(
     const std::vector<Field>& polynom_params, 
     int *num_of_sol, std::vector<Field> *solutions) {
 
-  const Field&  a = polynom_params[0];
-  const Field&  b = polynom_params[1];
-  const Field&  c = polynom_params[2];
-  const Field&  D = b * b - a * c - a * c - a * c - a * c;
+  const Field& a = polynom_params[0];
+  const Field& b = polynom_params[1];
+  const Field& c = polynom_params[2];
+  const Field& D = b * b - a * c - a * c - a * c - a * c;
   std::vector<Field>sol = VectorWithoutRepeatElements<Field>(
       CreateVectorOfSqrt(D));
 
   *num_of_sol = sol.size();
   for (Field& x : sol) {
-    x =(-b + x) /(a + a);
+    x = (-b + x) / (a + a);
+    if (x == a - a) {
+      x = a - a;
+    }
   }
   *solutions = sol;
 }
@@ -217,12 +234,12 @@ FieldEquationSolutions<Field> FieldPolynomialSolverHelper(
     case 2:
       SquareEquationSolver<Field>(
           polynom_params, 
-          & ans.num_of_sol_,& ans.solutions_);
+          & ans.num_of_sol_, & ans.solutions_);
       break;
     case 1:
       LinearEquationSolver<Field>(  
           polynom_params, 
-          & ans.num_of_sol_,& ans.solutions_);
+          & ans.num_of_sol_, & ans.solutions_);
       break;
     default:
       ConstantEquationSolver<Field>(
@@ -298,6 +315,7 @@ FieldEquationSolutions<Field> FieldPolynomialSolver(
   return FieldPolynomialSolverHelper<Field>(
       std::move(previous_params), args...);
 }
+
 
 /**
  * @breif specialization for FieldEquationSolutions, where answer lies in field of real numbers
