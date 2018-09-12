@@ -1,4 +1,4 @@
-/*! 
+/** 
  * \file 
  */ 
 #include <iostream>
@@ -40,9 +40,9 @@ class FieldEquationSolutions {
 
  public:
   
-	/*!
+	/**
    * @return number of roots;
-   *  PS_INF_ROOTS if real number_of_roots is infinity
+   *    PS_INF_ROOTS if real number_of_roots is infinity
    */ 
   const int GetNumOfSolutions() const {
     
@@ -50,8 +50,8 @@ class FieldEquationSolutions {
   }
 
 
-  /*!
-   * @returnstd::vector of roots
+  /**
+   * @return std::vector of roots
    */
   const std::vector<Field>& GetSolutions() const {
     
