@@ -1,4 +1,6 @@
 /** 
+ * @author Dmitry Lunin
+ * @version 1.1
  * \file 
  */ 
 #include <iostream>
@@ -12,7 +14,7 @@
 
 
 const int PS_INF_ROOTS = std::numeric_limits<int>::max();
-
+const double EPS = 1e-8;
 
 template<typename Field>
 class FieldEquationSolutions;
@@ -81,7 +83,8 @@ void FindingEquationError<double>(const std::vector<double>& polynom_params) {
   for (const double&  param : polynom_params) {
     if (!std::isfinite(param)) {
       
-      throw std::runtime_error("Invalid equation");
+      throw 
+        std::runtime_error("Invalid equation with not possible parameters");
     }
   }
 }
@@ -120,6 +123,20 @@ std::vector<Field> VectorWithoutRepeatElements(
 
   std::vector<Field> ans;
   for (const Field& x: vec) {
+    if (ans.empty() || x != ans.back() ) {
+      ans.push_back(x);
+    }
+  }
+  return ans;
+}
+
+
+template<>
+std::vector<double> VectorWithoutRepeatElements<double>(
+    const std::vector<double>& vec) {
+
+  std::vector<double> ans;
+  for (const double& x: vec) {
     if (ans.empty() || x != ans.back() ) {
       ans.push_back(x);
     }
